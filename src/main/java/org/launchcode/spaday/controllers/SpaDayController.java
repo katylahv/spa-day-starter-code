@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -50,14 +51,14 @@ public class SpaDayController {
                 "Name: <br>" +
                 "<input type = 'text' name = 'name'>" +
                 "<br>Skin type: <br>" +
-                "<select name = 'skintype'>" +
+                "<select name = 'skinType'>" +
                 "<option value = 'oily'>Oily</option>" +
                 "<option value = 'combination'>Combination</option>" +
                 "<option value = 'normal'>Normal</option>" +
                 "<option value = 'dry'>Dry</option>" +
                 "</select><br>" +
                 "Manicure or Pedicure? <br>" +
-                "<select name = 'manipedi'>" +
+                "<select name = 'maniPedi'>" +
                 "<option value = 'manicure'>Manicure</option>" +
                 "<option value = 'pedicure'>Pedicure</option>" +
                 "</select><br>" +
@@ -67,7 +68,7 @@ public class SpaDayController {
     }
 
     @PostMapping(value="")
-    public String spaMenu(@RequestParam String name, @RequestParam String skintype, @RequestParam String manipedi, Model model) {
+    public String spaMenu(@RequestParam String name, @RequestParam String skinType, @RequestParam String maniPedi, Model model) {
 
         ArrayList<String> facials = new ArrayList<String>();
         facials.add("Microdermabrasion");
@@ -75,12 +76,17 @@ public class SpaDayController {
         facials.add("Rejuvenating");
         facials.add("Enzyme Peel");
 
-        ArrayList<String> appropriateFacials = new ArrayList<String>();
+        model.addAttribute("name",name);
+        model.addAttribute("skinType",skinType);
+        model.addAttribute("maniPedi",maniPedi);
+
+        List<String> appropriateFacials = new ArrayList<String>();
         for (int i = 0; i < facials.size(); i ++) {
-            if (checkSkinType(skintype,facials.get(i))) {
+            if (checkSkinType(skinType,facials.get(i))) {
                 appropriateFacials.add(facials.get(i));
             }
         }
+        model.addAttribute("appropriateFacials",appropriateFacials);
 
         return "menu";
     }
